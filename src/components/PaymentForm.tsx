@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import styled from "styled-components";
 
 interface PaymentFormProps {}
@@ -55,12 +54,6 @@ const PaymentForm: React.FC<PaymentFormProps> = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    /*   const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY!); */
-
-    /*     const stripe = await loadStripe(
-      "pk_test_51ONJT9BtUF6TF1sVqTrvV2wSIvtiKOzzBvXzctr2YgdLXgoKAjH2ZHrE3XC8SfPo1NAlcqLAnirjuzrdoZTiLsh20010odktBe"
-    ); */
-
     if (!stripe || !elements) {
       return;
     }
@@ -79,21 +72,7 @@ const PaymentForm: React.FC<PaymentFormProps> = () => {
     if (error) {
       console.error(error);
     } else {
-      /*  console.log("Here is a token we can send to BackEnd:", token); */
-
-      const response = await fetch("http://localhost:3001/charge", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token,
-          amount: 1,
-        }),
-      });
-
-      const result = await response.json();
-      console.log(result);
+      console.log("Here is a token we're sending to Stripe.Dashboard:", token);
     }
   };
 
