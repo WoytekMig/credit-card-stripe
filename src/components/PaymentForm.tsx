@@ -49,6 +49,7 @@ const PaymentForm: React.FC<PaymentFormProps> = () => {
   const [ownerName, setOwnerName] = useState(
     country === "Poland" ? "Jan Kowalski" : "John Doe"
   );
+  const [customOwnerName, setCustomOwnerName] = useState("");
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -64,7 +65,9 @@ const PaymentForm: React.FC<PaymentFormProps> = () => {
       return;
     }
 
-    const { token, error } = await stripe.createToken(cardElement);
+    const { token, error } = await stripe.createToken(cardElement, {
+      name: customOwnerName || ownerName,
+    });
 
     if (error) {
       console.error(error);
@@ -77,6 +80,12 @@ const PaymentForm: React.FC<PaymentFormProps> = () => {
     const selectedCountry = event.target.value as "Poland" | "USA";
     setCountry(selectedCountry);
     setOwnerName(selectedCountry === "Poland" ? "Jan Kowalski" : "John Doe");
+  };
+
+  const handleCustomOwnerNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setCustomOwnerName(event.target.value);
   };
 
   return (
@@ -93,7 +102,11 @@ const PaymentForm: React.FC<PaymentFormProps> = () => {
       <div>
         <StyledLabel>
           Name of credit card Owner :
-          <StyledInput type="text" value={ownerName} readOnly />
+          <StyledInput
+            type="text"
+            value={customOwnerName || ownerName}
+            onChange={handleCustomOwnerNameChange}
+          />
         </StyledLabel>
       </div>
       <div>
